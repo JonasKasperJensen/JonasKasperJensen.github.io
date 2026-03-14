@@ -1,31 +1,360 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jonas Kasper Jensen</title>
+  <meta name="description" content="Projects by Jonas Kasper Jensen" />
+
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      max-width: 800px;
-      line-height: 1.6;
+    :root {
+      --bg: #f3f3ef;
+      --text: #111111;
+      --muted: #666666;
+      --line: #d8d8d1;
+      --max-width: 980px;
+      --space: 28px;
+      --space-lg: 64px;
+      --title-size: clamp(2rem, 5vw, 4.3rem);
+      --post-title-size: clamp(1.4rem, 3vw, 2.2rem);
+      --body-size: 16px;
     }
-    h1 {
-      font-size: 40px;
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: var(--body-size);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    img,
+    video,
+    model-viewer {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid var(--text);
+    }
+
+    .page {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 20px 20px 80px;
+    }
+
+    .site-header {
+      padding: 10px 0 48px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 48px;
+    }
+
+    .site-title {
+      margin: 0 0 12px;
+      font-size: var(--title-size);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .site-intro {
+      max-width: 28rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .posts {
+      display: block;
+    }
+
+    .post {
+      padding: 0 0 var(--space-lg);
+      margin: 0 0 var(--space-lg);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .post:last-child {
+      border-bottom: 0;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .post-date {
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .post-title {
+      margin: 0 0 20px;
+      font-size: var(--post-title-size);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+
+    .post-summary {
+      max-width: 34rem;
+      margin: 0 0 28px;
+    }
+
+    .blocks {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+    }
+
+    .block {
+      min-width: 0;
+    }
+
+    .span-12 { grid-column: span 12; }
+    .span-8  { grid-column: span 8; }
+    .span-7  { grid-column: span 7; }
+    .span-6  { grid-column: span 6; }
+    .span-5  { grid-column: span 5; }
+    .span-4  { grid-column: span 4; }
+
+    .text-block p {
+      margin: 0 0 1em;
+      max-width: 34rem;
+    }
+
+    .media-block img,
+    .media-block video,
+    .media-block model-viewer {
+      background: #e7e7e1;
+    }
+
+    .media-block video,
+    .media-block model-viewer {
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    .caption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .file-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .site-footer {
+      margin-top: 72px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 760px) {
+      .blocks {
+        grid-template-columns: 1fr;
+      }
+
+      .span-12,
+      .span-8,
+      .span-7,
+      .span-6,
+      .span-5,
+      .span-4 {
+        grid-column: span 1;
+      }
     }
   </style>
 </head>
 <body>
+  <main class="page">
+    <header class="site-header">
+      <h1 class="site-title">Jonas Kasper Jensen</h1>
+      <p class="site-intro">
+        Projects, texts and documentation.
+      </p>
+    </header>
 
-<h1>Jonas Kasper Jensen</h1>
+    <section id="posts" class="posts"></section>
 
-<p>
-Welcome to my website.
-</p>
+    <footer class="site-footer">
+      <div>jonaskasperjensen.com</div>
+      <div>Contemporary art</div>
+    </footer>
+  </main>
 
-<p>
-This page is hosted with GitHub Pages.
-</p>
+  <script>
+    const posts = [
+      {
+        title: "Project title",
+        date: "2026-03-14",
+        summary: "A short introduction to the work. One or two sentences are enough.",
+        blocks: [
+          {
+            type: "text",
+            span: "span-12",
+            html: `
+              <p>
+                This project explores the relation between image, space and digital material.
+                It was developed as part of an ongoing artistic practice concerned with perception,
+                fragmentation and constructed environments.
+              </p>
+            `
+          },
+          {
+            type: "image",
+            span: "span-12",
+            src: "assets/project-name/image1.jpg",
+            alt: "Project image"
+          },
+          {
+            type: "text",
+            span: "span-6",
+            html: `
+              <p>
+                The work combines installation, moving image and sculptural thinking.
+                Documentation, process material and related files are gathered here.
+              </p>
+            `
+          },
+          {
+            type: "image",
+            span: "span-6",
+            src: "assets/project-name/image2.jpg",
+            alt: "Project image"
+          },
+          {
+            type: "gif",
+            span: "span-12",
+            src: "assets/project-name/process.gif",
+            alt: "Process animation"
+          },
+          {
+            type: "glb",
+            span: "span-12",
+            src: "assets/project-name/model.glb",
+            poster: "assets/project-name/model-preview.jpg"
+          },
+          {
+            type: "files",
+            span: "span-12",
+            files: [
+              { label: "Project text (PDF)", href: "assets/project-name/text.pdf" },
+              { label: "3D model (.glb)", href: "assets/project-name/model.glb" }
+            ]
+          }
+        ]
+      }
+    ];
 
+    function formatDate(dateString) {
+      const date = new Date(dateString + "T12:00:00");
+      return new Intl.DateTimeFormat("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }).format(date);
+    }
+
+    function renderBlock(block) {
+      if (block.type === "text") {
+        return `
+          <div class="block text-block ${block.span || "span-12"}">
+            ${block.html || ""}
+          </div>
+        `;
+      }
+
+      if (block.type === "image" || block.type === "gif") {
+        return `
+          <figure class="block media-block ${block.span || "span-12"}">
+            <img src="${block.src}" alt="${block.alt || ""}">
+            ${block.caption ? `<figcaption class="caption">${block.caption}</figcaption>` : ""}
+          </figure>
+        `;
+      }
+
+      if (block.type === "video") {
+        return `
+          <figure class="block media-block ${block.span || "span-12"}">
+            <video controls preload="metadata" src="${block.src}"></video>
+            ${block.caption ? `<figcaption class="caption">${block.caption}</figcaption>` : ""}
+          </figure>
+        `;
+      }
+
+      if (block.type === "glb") {
+        return `
+          <figure class="block media-block ${block.span || "span-12"}">
+            <model-viewer
+              src="${block.src}"
+              ${block.poster ? `poster="${block.poster}"` : ""}
+              camera-controls
+              auto-rotate
+              shadow-intensity="1"
+              exposure="1">
+            </model-viewer>
+            ${block.caption ? `<figcaption class="caption">${block.caption}</figcaption>` : ""}
+          </figure>
+        `;
+      }
+
+      if (block.type === "files") {
+        const items = (block.files || [])
+          .map(file => `<li><a href="${file.href}" target="_blank" rel="noopener">${file.label}</a></li>`)
+          .join("");
+
+        return `
+          <div class="block ${block.span || "span-12"}">
+            <ul class="file-list">${items}</ul>
+          </div>
+        `;
+      }
+
+      return "";
+    }
+
+    function renderPosts() {
+      const container = document.getElementById("posts");
+      const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      container.innerHTML = sortedPosts.map(post => `
+        <article class="post">
+          <div class="post-date">${formatDate(post.date)}</div>
+          <h2 class="post-title">${post.title}</h2>
+          ${post.summary ? `<p class="post-summary">${post.summary}</p>` : ""}
+          <div class="blocks">
+            ${(post.blocks || []).map(renderBlock).join("")}
+          </div>
+        </article>
+      `).join("");
+    }
+
+    renderPosts();
+  </script>
 </body>
 </html>
