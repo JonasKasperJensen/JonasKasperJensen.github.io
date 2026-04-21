@@ -228,59 +228,6 @@
             `
           }
         ]
-      },
-
-      {
-        title: "Hello world",
-        date: "2026-03-14",
-        summary: "something something",
-        blocks: [
-          {
-            type: "text",
-            span: "span-12",
-            html: `
-              <p>
-                This is made with code
-              </p>
-            `
-          },
-          {
-            type: "image",
-            span: "span-12",
-            src: "assets/project1/image1.jpg",
-            alt: "Project image"
-          },
-          {
-            type: "text",
-            span: "span-6",
-            html: `
-              <p>
-                The work combines installation, moving image and sculptural thinking.
-                Documentation, process material and related files are gathered here.
-              </p>
-            `
-          },
-          {
-            type: "gif",
-            span: "span-12",
-            src: "assets/project-name/process.gif",
-            alt: "Process animation"
-          },
-          {
-            type: "glb",
-            span: "span-12",
-            src: "assets/project-name/model.glb",
-            poster: "assets/project-name/model-preview.jpg"
-          },
-          {
-            type: "files",
-            span: "span-12",
-            files: [
-              { label: "Project text (PDF)", href: "assets/project-name/text.pdf" },
-              { label: "3D model (.glb)", href: "assets/project-name/model.glb" }
-            ]
-          }
-        ]
       }
     ];
 
@@ -314,3 +261,60 @@
       if (block.type === "video") {
         return `
           <figure class="block media-block ${block.span || "span-12"}">
+            <video controls preload="metadata" src="${block.src}"></video>
+            ${block.caption ? `<figcaption class="caption">${block.caption}</figcaption>` : ""}
+          </figure>
+        `;
+      }
+
+      if (block.type === "glb") {
+        return `
+          <figure class="block media-block ${block.span || "span-12"}">
+            <model-viewer
+              src="${block.src}"
+              ${block.poster ? `poster="${block.poster}"` : ""}
+              camera-controls
+              auto-rotate
+              shadow-intensity="1"
+              exposure="1">
+            </model-viewer>
+            ${block.caption ? `<figcaption class="caption">${block.caption}</figcaption>` : ""}
+          </figure>
+        `;
+      }
+
+      if (block.type === "files") {
+        const items = (block.files || [])
+          .map(file => `<li><a href="${file.href}" target="_blank" rel="noopener">${file.label}</a></li>`)
+          .join("");
+
+        return `
+          <div class="block ${block.span || "span-12"}">
+            <ul class="file-list">${items}</ul>
+          </div>
+        `;
+      }
+
+      return "";
+    }
+
+    function renderPosts() {
+      const container = document.getElementById("posts");
+      const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      container.innerHTML = sortedPosts.map(post => `
+        <article class="post">
+          <div class="post-date">${formatDate(post.date)}</div>
+          <h2 class="post-title">${post.title}</h2>
+          ${post.summary ? `<p class="post-summary">${post.summary}</p>` : ""}
+          <div class="blocks">
+            ${(post.blocks || []).map(renderBlock).join("")}
+          </div>
+        </article>
+      `).join("");
+    }
+
+    renderPosts();
+  </script>
+</body>
+</html>
