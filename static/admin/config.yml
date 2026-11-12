@@ -1,0 +1,63 @@
+backend:
+  name: github
+  repo: JonasKasperJensen/JonasKasperJensen.github.io
+  branch: main
+  auth_methods: [token]
+
+media_folder: static/uploads
+public_folder: /uploads
+
+collections:
+  - name: posts
+    label: Photo posts
+    label_singular: Photo post
+    folder: content/posts
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    identifier_field: title
+    summary: "{{title}} · {{date}}"
+    fields:
+      - name: title
+        label: Admin title
+        widget: string
+        hint: A short name to help you find this post. Not shown on the website.
+      - name: date
+        label: Date
+        widget: datetime
+        default: "{{now}}"
+        format: YYYY-MM-DD
+        date_format: DD/MM/YYYY
+        time_format: false
+        hint: Posts appear newest first. Future dates stay hidden until the site is rebuilt after that date.
+      - name: images
+        label: Images
+        widget: list
+        min: 1
+        field:
+          name: image
+          label: Image
+          widget: image
+        hint: The first image is the grid cover. Drag to reorder. Use JPG, PNG or WebP for photographs.
+      - { name: caption, label: Short caption, widget: text, required: false }
+      - name: alt
+        label: Image description
+        widget: string
+        required: false
+        hint: Briefly describe the photographs for visitors using a screen reader.
+  - name: settings
+    label: Profile
+    files:
+      - name: profile
+        label: Profile and About
+        file: data/profile.yaml
+        fields:
+          - { name: name, label: Display name, widget: string }
+          - { name: avatar, label: Profile photo, widget: image, required: false }
+          - { name: bio, label: About, widget: text, required: false }
+          - name: email
+            label: Contact email
+            widget: string
+            required: false
+            hint: Leave empty to hide the Contact link.

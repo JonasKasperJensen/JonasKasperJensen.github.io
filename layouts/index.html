@@ -1,0 +1,53 @@
+{{ define "main" }}
+{{ $posts := where site.RegularPages "Section" "posts" }}
+{{ $posts = where $posts "Params.images" "!=" nil }}
+<header class="profile shell" id="top">
+  <img class="avatar" src="{{ partial "media-url.html" (site.Data.profile.avatar | default "uploads/avatar.svg") }}" alt="{{ partial "profile-name.html" . }}" width="80" height="80">
+  <h1>{{ partial "profile-name.html" . }}</h1>
+  <nav class="header-nav" aria-label="Main navigation"><a href="#about">About <span aria-hidden="true">↘</span></a></nav>
+</header>
+<main class="shell" id="main">
+  <div class="grid" aria-label="Photo posts">
+    {{ range $index, $post := $posts.ByDate.Reverse }}
+      {{ with .Params.images }}
+      <a class="tile" href="{{ $post.RelPermalink }}" data-post="{{ $post.File.UniqueID }}" aria-label="View photos from {{ $post.Date.Format "2 January 2006" }}">
+        <img src="{{ partial "media-url.html" (index . 0) }}" alt="{{ $post.Params.alt | default "Photograph" }}" width="900" height="1200" loading="{{ if lt $index 3 }}eager{{ else }}lazy{{ end }}" decoding="async">
+      </a>
+      {{ end }}
+    {{ else }}
+      <p class="empty-state">New photographs will appear here.</p>
+    {{ end }}
+  </div>
+  <section class="about" id="about" aria-labelledby="about-title">
+    <h2 id="about-title">About</h2>
+    <div class="about-content">
+      {{ with site.Data.profile.bio }}<p>{{ . }}</p>{{ end }}
+      <div class="about-links">
+        {{ with site.Data.profile.email }}<a href="mailto:{{ . }}">Contact <span aria-hidden="true">↗</span></a>{{ end }}
+      </div>
+    </div>
+  </section>
+</main>
+<dialog class="viewer" id="viewer" aria-label="Photo slideshow">
+  <button class="close-viewer icon-button" id="close-viewer" type="button" aria-label="Close slideshow" autofocus>×</button>
+  <button class="viewer-prev icon-button" id="prev" type="button" aria-label="Previous image">←</button>
+  <figure class="viewer-figure">
+    <div class="viewer-image-wrap">
+      <img id="viewer-image" alt="">
+      <p id="viewer-error" role="status" hidden>This image could not be loaded. Please try again.</p>
+    </div>
+    <figcaption class="viewer-caption">
+      <span id="viewer-text"></span>
+      <time id="viewer-date"></time>
+      <span id="viewer-count" aria-live="polite" aria-atomic="true"></span>
+    </figcaption>
+  </figure>
+  <button class="viewer-next icon-button" id="next" type="button" aria-label="Next image">→</button>
+</dialog>
+{{ range $posts }}
+  {{ $post := . }}
+  <template data-post="{{ .File.UniqueID }}" data-text="{{ .Params.caption }}" data-date="{{ .Date.Format "2 Jan 2006" }}" data-datetime="{{ .Date.Format "2006-01-02" }}">
+    {{ range .Params.images }}<img src="{{ partial "media-url.html" . }}" alt="{{ $post.Params.alt | default "Photograph" }}">{{ end }}
+  </template>
+{{ end }}
+{{ end }}

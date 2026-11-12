@@ -1,0 +1,12 @@
+baseURL = "https://www.jonaskasperjensen.com/"
+languageCode = "en"
+title = "Jonas Kasper Jensen"
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term", "section"]
+ignoreFiles = ["^preview/"]
+
+[outputs]
+  home = ["HTML"]
+
+[markup.goldmark.renderer]
+  unsafe = false
