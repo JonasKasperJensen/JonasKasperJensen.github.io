@@ -1,0 +1,2 @@
+{{- /* CMS stores local uploads with a leading slash. Trim it for subpath hosting. */ -}}
+{{- return (strings.TrimPrefix "/" . | relURL) -}}

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="{{ site.Language.LanguageCode }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>{{ partial "profile-name.html" . }}{{ if not .IsHome }} — {{ .Date.Format "2 Jan 2006" }}{{ end }}</title>
+  <meta name="description" content="{{ .Params.caption | default site.Data.profile.bio }}">
+  <link rel="canonical" href="{{ .Permalink }}">
+  <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  {{ block "main" . }}{{ end }}
+  {{ if .IsHome }}<script defer src="{{ "js/feed.js" | relURL }}"></script>{{ end }}
+</body>
+</html>
