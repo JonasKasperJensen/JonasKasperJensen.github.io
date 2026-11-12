@@ -47,7 +47,7 @@
 {{ range $posts }}
   {{ $post := . }}
   <template data-post="{{ .File.UniqueID }}" data-text="{{ .Params.caption }}" data-date="{{ .Date.Format "2 Jan 2006" }}" data-datetime="{{ .Date.Format "2006-01-02" }}">
-    {{ range .Params.images }}<img src="{{ partial "media-url.html" . }}" alt="{{ $post.Params.alt | default "Photograph" }}">{{ end }}
+    {{ range $i, $src := .Params.images }}<img src="{{ partial "media-url.html" $src }}" alt="{{ $post.Params.alt | default "Photograph" }}"{{ with $post.Params.image_captions }}{{ if lt $i (len .) }} data-caption="{{ index . $i }}"{{ end }}{{ end }}>{{ end }}
   </template>
 {{ end }}
 {{ end }}
