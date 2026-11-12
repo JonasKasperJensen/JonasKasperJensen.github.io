@@ -24,6 +24,7 @@
   let opener = null;
   let lockedScroll = false;
   let touchStart = null;
+  let defaultCaption = '';
 
   function render() {
     const current = images[index];
@@ -31,6 +32,8 @@
     image.hidden = false;
     image.alt = current.alt || 'Image';
     image.src = current.src;
+    caption.textContent = current.caption || defaultCaption;
+    caption.hidden = !caption.textContent;
     count.textContent = `${index + 1} / ${images.length}`;
     count.hidden = images.length < 2;
     previous.hidden = next.hidden = images.length < 2;
@@ -47,14 +50,13 @@
 
   function open(tile, template) {
     images = [...template.content.querySelectorAll('img')]
-      .map(item => ({ src: item.getAttribute('src'), alt: item.alt }))
+      .map(item => ({ src: item.getAttribute('src'), alt: item.alt, caption: item.dataset.caption }))
       .filter(item => item.src);
     if (!images.length) return false;
 
     opener = tile;
     index = 0;
-    caption.textContent = template.dataset.text || '';
-    caption.hidden = !caption.textContent;
+    defaultCaption = template.dataset.text || '';
     date.textContent = template.dataset.date || '';
     date.hidden = !date.textContent;
     if (template.dataset.datetime) date.dateTime = template.dataset.datetime;
